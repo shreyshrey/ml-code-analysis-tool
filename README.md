@@ -1,6 +1,4 @@
-Run and tested on:
-Apple pro, M1
-RAM - 16gb
+Run and tested on: Apple pro, M1 chip, RAM - 16gb
 
 
 ## Code analysis tool - Unit test generator (testgen)
@@ -86,11 +84,21 @@ def merge_dicts(*dicts):
 testgen example_files/merge.py
 ```
 
-3. The tool will create a new test file at `tests/test_utils.py`.
+3. The tool will create a new test file at `tests/test_merge.py`.
 
 Options:
 
 - `--model TEXT`: specifcy which Ollama model to use. Defaults to `codellama:7b`.
 - `--force`, `-f`: ovoerwrites the test file if already exists.
 
-IDE integration (Visual studio code)
+
+#### Languages it supports
+- Python
+- JavaScript
+- TypeScript
+- Java
+- Go
+- Rust
+- Ruby
+- C#
+
