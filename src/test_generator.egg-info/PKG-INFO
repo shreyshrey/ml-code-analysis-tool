@@ -1,0 +1,6 @@
+Metadata-Version: 2.4
+Name: test-generator
+Version: 0.1.0
+Requires-Dist: typer[all]
+Requires-Dist: requests
+Requires-Dist: rich

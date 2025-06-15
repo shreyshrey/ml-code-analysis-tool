@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "test-generator"
+version = "0.1.0"
+dependencies = [
+    "typer[all]",
+    "requests",
+    "rich",
+]
+
+[project.scripts]
+testgen = "test_generator.main:app"
+
+[tool.setuptools.packages.find]
+where = ["src"]

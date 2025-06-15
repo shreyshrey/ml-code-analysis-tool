@@ -1,0 +1,19 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Generate Unit Test",
+        "type": "shell",
+        "command": "testgen",
+        "args": [
+          "--code",
+          "${selectedText}"
+        ],
+        "presentation": {
+          "reveal": "always",
+          "panel": "new",
+          "clear": true
+        }
+      }
+    ]
+  }
