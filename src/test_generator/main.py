@@ -1,7 +1,8 @@
 import typer
 from rich.console import Console
 from rich.panel import Panel
-from rich.spinner import Spinner
+import rich.spinner as spinner
+from typing_extensions import Annotated
 from .llm_client import OllamaClient
 from pathlib import Path
 
@@ -44,7 +45,8 @@ LANGUAGE_TO_TEST_FILENAME = {
 @app.command()
 def main(
     filepath: Path = typer.Argument(..., exists=True, file_okay=True, dir_okay=False, readable=True, help="The path to the file to create test for."),
-    model: str = typer.Option("codellama:7b", help="The Ollama model to use for creating tests.")
+    model: str = typer.Option("codellama:7b", help="The Ollama model to use for creating tests."),
+    force: Annotated[bool, typer.Option("--force")] = False
 ):
     """
     Generates a unit test for a given code snippet using a local LLM.
@@ -71,6 +73,31 @@ def main(
     if result.startswith("Error:"):
         console.print(Panel(result, title="[bold red]Error", border_style="red"))
         raise typer.Exit(code=1)
+    
+    # Create test files
+    name_generator = LANGUAGE_TO_TEST_FILENAME.get(language)
+    if not name_generator:
+        console.print(Panel(f"Error: No test file name generator for {language}.", title="[bold red]Error", border_style="red"))
+        raise typer.Exit(code=1)
+    test_filename = name_generator(filepath.stem)
+
+    try:
+        # tries to create a path like "tests/example_files/test_file.py" from "example_files/test_file.py". Usually it'd be from src folder but there we have given it example_files as the root.
+        # this is to ensure that the test files are created in a structured way.
+        relative_path = filepath.relative_to("example_files")
+        test_file_path = Path("tests") / relative_path.with_name(test_filename)
+    except ValueError:
+        test_file_path = Path("example_files") / test_filename
+
+    
+    test_file_path.parent.mkdir(parents=True, exist_ok=True)
+
+    if test_file_path.exists() and not force:
+        console.print(Panel(f"Test file already exists at [cyan]{test_file_path}[green]. \nUse the --force or -f flag to overwrite.", title="[bold yellow]Operation Cancelled", border_style="yellow"))
+        raise typer.Exit(code=1)
+    
+    test_file_path.write_text(result)
+    console.print(Panel(f"Successfully created test file:\n[green]{test_file_path}[/green]", title="✅ [bold green]Success", border_style="green"))
 
     # Display the successful result in a nice panel
     console.print(Panel(result, title="[bold green]Generated Unit Test", border_style="green", expand=True))
