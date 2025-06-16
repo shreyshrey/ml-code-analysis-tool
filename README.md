@@ -116,7 +116,7 @@ This section detail the technical decision, assumptions and trad-offs made durin
 **Why Ollama:** its felxible, controlled anc customised. For more advanced users such as developers, while other are more user-friendly. It is full open-source and avaliable for all major OS. It is secure when working with sensitive codebase. It also avoid network latency and cannot be dependent on issues such as deprecation or outage.
 
 **Model:** `qwen2.5-coder:7b`
-**Alternatives that were considered:** `codellama:7b`
+**Alternatives that were considered:** `codellama:7b`. Larger model of Qwen2.5-coder were also consider as they are leading models for coding, see the leaderboard [here](https://huggingface.co/spaces/bigcode/bigcode-models-leaderboard)
 **Why `qwen2.5-coder:7b`:** this model has demonstarted state-of-the-art performance for its size. The critical code genration benchmarh for HumanEvl, thie model shows significatn improvement over the alternative choice. Resulting in more accurate and logically sound unit test. Both models were tested out of with `qwen2.5-coder:7b` not only created better unit test but also faster.
 
 **Interface choice:**: A simple command-line tool
