@@ -21,7 +21,7 @@ EXTENSION_TO_LANGUAGE = {
 }
 
 LANGUAGE_TO_FRAMEWORK = {
-    "Python": "unittest",
+    "Python": "pytest",
     "JavaScript": "Jest",
     "TypeScript": "Jest",
     "Java": "JUnit",
@@ -45,7 +45,7 @@ LANGUAGE_TO_TEST_FILENAME = {
 @app.command()
 def main(
     filepath: Path = typer.Argument(..., exists=True, file_okay=True, dir_okay=False, readable=True, help="The path to the file to create test for."),
-    model: str = typer.Option("codellama:7b", help="The Ollama model to use for creating tests."),
+    model: str = typer.Option("qwen2.5-coder:7b", help="The Ollama model to use for creating tests."),
     force: Annotated[bool, typer.Option("--force")] = False
 ):
     """

@@ -2,7 +2,7 @@ import requests
 import json
 
 class OllamaClient:
-    def __init__(self, endpoint='http://localhost:11434/api/generate'):
+    def __init__(self, endpoint='http://localhost:11434/api/chat'):
         self.endpoint = endpoint
 
     def generate_test(self, code_file: str, language: str, framework: str, model: str) -> str:
@@ -10,7 +10,12 @@ class OllamaClient:
 
         payload = {
             "model": model,
-            "prompt": prompt,
+            "messages": [
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ],
             "stream": False
         }
 
@@ -19,13 +24,15 @@ class OllamaClient:
             response.raise_for_status()  # Raise an error for bad responses
 
             response_data = response.json()
-            generated_code = response_data.get("response", "")
+            generated_code = response_data.get("message", {}).get("content", "")
+            if not generated_code:
+                return "Error: No code generated. Please check the model and prompt."
             return self._clean_output(generated_code)
         
         except requests.exceptions.ConnectionError:
-            return "Connection error: Unable to reach the Ollama server. Please ensure it's running"
+            return "Connection error: Unable to reach the Ollama server. Please ensure it's running."
         except KeyError:
-            return "Error: The response from the server is missing expected fields."
+            return "Error: The response from the server is unexpected."
 
 
     def _build_prompt(self, code: str, language: str, framework: str) -> str:

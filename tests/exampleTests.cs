@@ -1,58 +1,60 @@
-using System.Collections.Generic;
+csharp
 using NUnit.Framework;
-namespace Tests
+
+[TestFixture]
+public class DictionaryMergeTests
 {
-    public class DictionaryTests
+    [Test]
+    public void Test_MergingDictionaries_UsingConcat()
     {
-        [TestCase(1)]
-        public void MergeDictionariesUsingLinq()
+        // Arrange
+        var dict1 = new Dictionary<string, string> { { "Superman", "Flight" } };
+        var dict2 = new Dictionary<string, string> { { "Batman", "Gadgets" } };
+
+        // Act
+        var merged = dict1.Concat(dict2).ToDictionary(x => x.Key, x => x.Value);
+
+        // Assert
+        #Test case 1:
+        Assert.AreEqual("Flight", merged["Superman"]);
+        #Test case 2:
+        Assert.AreEqual("Gadgets", merged["Batman"]);
+    }
+
+    [Test]
+    public void Test_MergingDictionaries_UsingForeach()
+    {
+        // Arrange
+        var dict1 = new Dictionary<string, string> { { "Superman", "Flight" } };
+        var dict2 = new Dictionary<string, string> { { "Batman", "Gadgets" } };
+
+        // Act
+        foreach (var item in dict2)
         {
-            var dict1 = new Dictionary<string, string> { { "Superman", "Flight" } };
-            var dict2 = new Dictionary<string, string> { { "Batman", "Gadgets" } };
-
-            // Using LINQ
-            var merged = dict1.Concat(dict2).ToDictionary(x => x.Key, x => x.Value);
-
-            Assert.AreEqual(3, merged.Count());
-            Assert.IsTrue(merged.ContainsKey("Superman"));
-            Assert.IsTrue(merged.ContainsKey("Batman"));
-            Assert.AreEqual("Flight", merged["Superman"]);
-            Assert.AreEqual("Gadgets", merged["Batman"]);
+            dict1[item.Key] = item.Value;
         }
 
-        [TestCase(2)]
-        public void MergeDictionariesUsingForeachLoop()
-        {
-            var dict1 = new Dictionary<string, string> { { "Superman", "Flight" } };
-            var dict2 = new Dictionary<string, string> { { "Batman", "Gadgets" } };
+        // Assert
+        #Test case 3:
+        Assert.AreEqual("Flight", dict1["Superman"]);
+        #Test case 4:
+        Assert.AreEqual("Gadgets", dict1["Batman"]);
+    }
 
-            // Using a foreach loop
-            foreach (var item in dict2)
-            {
-                dict1[item.Key] = item.Value;
-            }
+    [Test]
+    public void Test_MergingDictionaries_UsingUnion()
+    {
+        // Arrange
+        var dict1 = new Dictionary<string, string> { { "Superman", "Flight" } };
+        var dict2 = new Dictionary<string, string> { { "Batman", "Gadgets" } };
 
-            Assert.AreEqual(2, dict1.Count());
-            Assert.IsTrue(dict1.ContainsKey("Superman"));
-            Assert.IsTrue(dict1.ContainsKey("Batman"));
-            Assert.AreEqual("Flight", dict1["Superman"]);
-            Assert.AreEqual("Gadgets", dict1["Batman"]);
-        }
+        // Act
+        var merged = dict1.Union(dict2).ToDictionary(x => x.Key, x => x.Value);
 
-        [TestCase(3)]
-        public void MergeDictionariesUsingUnionExtensionMethod()
-        {
-            var dict1 = new Dictionary<string, string> { { "Superman", "Flight" } };
-            var dict2 = new Dictionary<string, string> { { "Batman", "Gadgets" } };
-
-            // Using the Union extension method
-            var merged2 = dict1.Union(dict2).ToDictionary(x => x.Key, x => x.Value);
-
-            Assert.AreEqual(3, merged2.Count());
-            Assert.IsTrue(merged2.ContainsKey("Superman"));
-            Assert.IsTrue(merged2.ContainsKey("Batman"));
-            Assert.AreEqual("Flight", merged2["Superman"]);
-            Assert.AreEqual("Gadgets", merged2["Batman"]);
-        }
+        // Assert
+        #Test case 5:
+        Assert.AreEqual("Flight", merged["Superman"]);
+        #Test case 6:
+        Assert.AreEqual("Gadgets", merged["Batman"]);
     }
 }
