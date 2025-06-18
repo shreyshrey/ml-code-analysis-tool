@@ -1,1 +1,1 @@
-test-generator
+test_generator
