@@ -16,3 +16,8 @@ testgen = "test_generator.main:app"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4.1",
+]

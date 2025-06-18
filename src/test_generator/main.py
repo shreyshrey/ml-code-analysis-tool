@@ -72,10 +72,10 @@ def determine_output_path(sourcepath: Path, language: str) -> Path:
     test_filename = name_generator(sourcepath.stem)
 
     try:
-        # tries to create a path like "tests/example_files/test_file.py" from "example_files/test_file.py". Usually it'd be from src folder but there we have given it example_files as the root.
+        # tries to create a path like "example_tests/example_files/test_file.py" from "example_files/test_file.py". Usually it'd be from src folder but there we have given it example_files as the root.
         # this is to ensure that the test files are created in a structured way.
         relative_path = sourcepath.relative_to("example_files")
-        test_file_path = Path("tests") / relative_path.with_name(test_filename)
+        test_file_path = Path("example_tests") / relative_path.with_name(test_filename)
     except ValueError:
         test_file_path = Path("example_files") / test_filename
 
@@ -97,11 +97,12 @@ def write_test_file(output_path: Path, content: str, force: bool):
 
 @app.command()
 def main(
-    filepath: Path = typer.Argument(..., exists=True, file_okay=True, dir_okay=False, readable=True, help="The path to the file to create test for."),
-    model: str = typer.Option("qwen2.5-coder:7b", help="The Ollama model to use for creating tests."),
+    filepath: Annotated[Path, typer.Argument(..., exists=True, file_okay=True, dir_okay=False, readable=True, help="The path to the file to create test for.")],
+    model: Annotated[str, typer.Option(help="The Ollama model to use for creating tests.")] = "qwen2.5-coder:7b",
     force: Annotated[bool, typer.Option("--force")] = False,
-    endpoint:  str = typer.Option("http://localhost:11434/api/chat", help="The endpoint of the Ollama server to use for creating tests.")
+    endpoint:  Annotated[str, typer.Option(help="The endpoint of the Ollama server to use for creating tests.")] = "http://localhost:11434/api/chat"
 ):
+
     """
     Generates a unit test for a given code snippet using a local LLM.
     """
