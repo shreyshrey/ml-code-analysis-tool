@@ -21,3 +21,10 @@ where = ["src"]
 dev = [
     "pytest>=8.4.1",
 ]
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "pytest-mock",
+    "syrupy",  # For snapshot testing in E2E tests
+]
