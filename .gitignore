@@ -1,4 +1,4 @@
 .vscode/settings.json
 __pycache__/
  *.pyc
- .egg-info/
+src/*.egg-info
