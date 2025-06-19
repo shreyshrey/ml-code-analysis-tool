@@ -5,6 +5,7 @@ import rich.spinner as spinner
 from typing_extensions import Annotated
 from .llm_client import OllamaClient
 from pathlib import Path
+from .celebrate import display_celebration_animation
 
 app = typer.Typer()
 console = Console()
@@ -93,13 +94,14 @@ def write_test_file(output_path: Path, content: str, force: bool):
     
     output_path.write_text(content)
     console.print(Panel(f"Successfully created test file:\n[green]{output_path}[/green]", title="✅ [bold green]Success", border_style="green"))
+    display_celebration_animation()
 
 
 @app.command()
-def main(
+def generate(
     filepath: Annotated[Path, typer.Argument(..., exists=True, file_okay=True, dir_okay=False, readable=True, help="The path to the file to create test for.")],
     model: Annotated[str, typer.Option(help="The Ollama model to use for creating tests.")] = "qwen2.5-coder:7b",
-    force: Annotated[bool, typer.Option("--force")] = False,
+    force: Annotated[bool, typer.Option("--force", "-f")] = False,
     endpoint:  Annotated[str, typer.Option(help="The endpoint of the Ollama server to use for creating tests.")] = "http://localhost:11434/api/chat"
 ):
 
@@ -126,7 +128,41 @@ def main(
     
   
     # Display the successful result in a nice panel
-    console.print(Panel(result, title="[bold green]Generated Unit Test", border_style="green", expand=True))
+    # console.print(Panel(result, title="[bold green]Generated Unit Test", border_style="green", expand=True))
+
+@app.command()
+def translate(filepath: Annotated[Path, typer.Argument(
+        ..., exists=True, file_okay=True, dir_okay=False, readable=True, help="The path to the source code file to translate."
+)],
+    target_language: Annotated[str,typer.Option(
+        ..., "--to", "-t", help="The target language to convert the code to (e.g., 'Python', 'C','Go')."
+    )],
+    model: Annotated[str, typer.Option(help="The Ollama model to use.")] = "qwen2.5-coder:7b"
+):
+    """
+    Translates a source code file from one language to another.
+    """
+    console.print(f"Analyzing file: {filepath.name}")
+    code_snippet = filepath.read_text()
+    source_language = EXTENSION_TO_LANGUAGE.get(filepath.suffix)
+
+    if not source_language:
+        console.print(Panel(f"Error: Cannot determine source language from file type '{filepath.suffix}'.", title="[bold red]Error", border_style="red"))
+        raise typer.Exit(code=1)
+
+    console.print(f"Translating from {source_language} to {target_language}...")
+
+    client = OllamaClient()
+    with console.status("[bold green]Translating code with AI...", spinner="dots"):
+        translated_code = client.translate_code(code_snippet, source_language, target_language, model)
+
+    if translated_code.startswith("Error:"):
+        console.print(Panel(translated_code, title="[bold red]Error", border_style="red"))
+        raise typer.Exit(code=1)
+
+    console.print(Panel(translated_code, title=f"[bold green]Translated {target_language} Code", border_style="green", expand=True))
+
+
 
 if __name__ == "__main__":
     app()
