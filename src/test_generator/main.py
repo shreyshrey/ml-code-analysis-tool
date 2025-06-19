@@ -5,6 +5,7 @@ import rich.spinner as spinner
 from typing_extensions import Annotated
 from .llm_client import OllamaClient
 from pathlib import Path
+from .celebrate import display_celebration_animation
 
 app = typer.Typer()
 console = Console()
@@ -93,6 +94,7 @@ def write_test_file(output_path: Path, content: str, force: bool):
     
     output_path.write_text(content)
     console.print(Panel(f"Successfully created test file:\n[green]{output_path}[/green]", title="✅ [bold green]Success", border_style="green"))
+    display_celebration_animation()
 
 
 @app.command()
@@ -126,7 +128,7 @@ def main(
     
   
     # Display the successful result in a nice panel
-    console.print(Panel(result, title="[bold green]Generated Unit Test", border_style="green", expand=True))
+    # console.print(Panel(result, title="[bold green]Generated Unit Test", border_style="green", expand=True))
 
 if __name__ == "__main__":
     app()
