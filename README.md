@@ -8,13 +8,13 @@ Ran and tested on: Apple MacBook Pro, M1 chip, RAM - 16gb
 
 ### How it works
 This tool uses the open-source language model (`qwen2.5-coder:7b`) to locally run on your machine via Ollama. It is designed with following principles in mind:
-- Standard hardware - by using quantized model, this tool is deigned to be responsive on develoepr laptops and desktops, without requiring a high-end GPU.
+- Standard hardware - by using quantized model, this tool is deigned to be responsive on developer laptops and desktops, without requiring a high-end GPU.
 - Private and secure - code will never to sent to third-party API.
-- Language aggnostic - caters to major languages, it detect the programming language from the file extension and uses the approatie testing frame.
+- Language agnostic - caters to major languages, it detect the programming language from the file extension and uses the appropriate testing frame.
 
 
 ### Prerequisties
-- Before you beging, please make sure you have the following software installed on your system:
+- Before you begin, please make sure you have the following software installed on your system:
 1. Python: version 3.8 or newer
 2. Ollama: tool that allows you to run the LLM locally on your machine. Download from https://ollama.com
 
@@ -30,7 +30,7 @@ cd ml-code-analysis-tool
 ```
 
 2. Set up the AI model with Ollama
-- Ensure Ollama is running - launche the Ollama application. It will run as a background service
+- Ensure Ollama is running - launch the Ollama application. It will run as a background service
 - Download the model - `qwen2.5-coder:7b` as its provides a good balance of performance and resources usage for standard hardware.
 ```sh
 ollama run qwen2.5-coder:7b
@@ -88,8 +88,8 @@ testgen example_files/merge.py
 
 Options:
 
-- `--model TEXT`: specifcy which Ollama model to use. Defaults to `qwen2.5-coder:7b`.
-- `--force`, `-f`: ovoerwrites the test file if already exists.
+- `--model TEXT`: specify which Ollama model to use. Defaults to `qwen2.5-coder:7b`.
+- `--force`, `-f`: overwrites the test file if already exists.
 
 
 #### Languages the tool supports
@@ -113,11 +113,11 @@ This section detail the technical decision, assumptions and trad-offs made durin
 
 **Local tool:** Ollama <br>
 **Alternatives that were considered:** LM studio, GPT4ALL <br>
-**Why Ollama:** its felxible, controlled anc customised. For more advanced users such as developers, while other are more user-friendly. It is full open-source and avaliable for all major OS. It is secure when working with sensitive codebase. It also avoid network latency and cannot be dependent on issues such as deprecation or outage.
+**Why Ollama:** its flexible, controlled anc customised. For more advanced users such as developers, while other are more user-friendly. It is full open-source and available for all major OS. It is secure when working with sensitive codebase. It also avoid network latency and cannot be dependent on issues such as deprecation or outage.
 
 **Model:** `qwen2.5-coder:7b` <br>
 **Alternatives that were considered:** `codellama:7b`. Larger model of Qwen2.5-coder were also consider as they are leading models for coding, see the leaderboard [here](https://huggingface.co/spaces/bigcode/bigcode-models-leaderboard) <br>
-**Why `qwen2.5-coder:7b`:** this model has demonstarted state-of-the-art performance for its size. The critical code genration benchmarh for HumanEvl, thie model shows significatn improvement over the alternative choice. Resulting in more accurate and logically sound unit test. Both models were tested out of with `qwen2.5-coder:7b` not only created better unit test but also faster.
+**Why `qwen2.5-coder:7b`:** this model has demonstrated state-of-the-art performance for its size. The critical code generation benchmark for HumanEvl, thi model shows significant improvement over the alternative choice. Resulting in more accurate and logically sound unit test. Both models were tested out of with `qwen2.5-coder:7b` not only created better unit test but also faster.
 
 **Interface choice:**: A simple command-line tool <br>
 **Why**: it is lightweight, native and can be easily integrated into larger automated workflow and IDEs. <br>
@@ -126,6 +126,6 @@ This section detail the technical decision, assumptions and trad-offs made durin
 ### Future improvements
 
 With more time, the tool can evolved into intelligent-assistant.
-1. Multile files instead of running each file one ny one to generate the tests.
+1. Multiple files instead of running each file one ny one to generate the tests.
 2. Full integration to IDE, currently the user have to highlight and run the code. It would be ideal to have it run from the menu or command palette.
-3. Performance - currently the tol waits for the entire test file to be generated before displaying it. For complex test, this can be slow (encountered during testing). Perphas having stream can generate test code token-by-token, for immediate feedback and potenatial increase in the perofmance.
+3. Performance - currently the tol waits for the entire test file to be generated before displaying it. For complex test, this can be slow (encountered during testing). Perhaps having stream can generate test code token-by-token, for immediate feedback and potential increase in the performance.
